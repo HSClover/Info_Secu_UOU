@@ -20,7 +20,7 @@ class SimpleLSFR:
     def get_clock_bit(self):
         return self.state[self.clock_bit_index]
 
-    def majority(a, b, c):
+    def majority(a, b, c): # 다수결 판독
         count = a + b + c
         if count >= 2:
             return 1
@@ -55,7 +55,7 @@ class SimpleA5:
         
         return self.x, self.y, self.z
 
-    def get_keystream_bit(self):
+    def get_keystream_bit(self): # 키스트림 비트
         majority_result = SimpleLSFR.majority(self.x.get_clock_bit(), self.y.get_clock_bit(), self.z.get_clock_bit())
         
         if self.x.get_clock_bit() == majority_result:
@@ -67,10 +67,10 @@ class SimpleA5:
 
         return self.x.state[4] ^ self.y.state[5] ^ self.z.state[6]
 
-    def get_keystream(self, nbits):
+    def get_keystream(self, nbits): # 키스트림 얻기
         keystream = 0
         for _ in range(nbits):
-            keystream = (keystream << 1) | self.get_keystream_bit()
+            keystream = (keystream << 1) | self.get_keystream_bit() # 쉬프트
 
         return keystream
 
