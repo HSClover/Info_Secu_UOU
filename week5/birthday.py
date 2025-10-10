@@ -12,7 +12,7 @@ import os
 
 # 주요 숫자 설정
 BIT = 16
-BYTE = BIT // 2
+BYTE = BIT // 8  # 16비트는 2바이트입니다.
 MAX = 50
 
 def birthday():
@@ -35,9 +35,9 @@ crash_attempt = []
 for i in range(MAX):
     attempt = birthday()
     crash_attempt.append(attempt)
-    print(f"[{i+1}/{max}] 충돌까지 시도 횟수 : {attempt}")
+    print(f"[{i+1}/{MAX}] 충돌까지 시도 횟수 : {attempt}")
     
 average_attempt = sum(crash_attempt) / MAX
 thr_attempt = 2**(BIT/2)
 
-print(f"=== 총 {MAX}회 ===\n평균 충올 발생 시도 : {average_attempt:.3f}\n이론상 횟수 : {thr_attempt:.0f}")
+print(f"\n=== 총 {MAX}회 ===\n평균 충돌 발생 시도 : {average_attempt:.3f}\n이론상 횟수 : {thr_attempt:.0f}")
