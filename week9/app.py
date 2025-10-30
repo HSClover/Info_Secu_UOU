@@ -3,13 +3,12 @@ from flask import Flask, render_template, request, send_file, session, redirect,
 from PIL import Image, ImageDraw, ImageFont, ImageFilter
 
 app = Flask(__name__)
-# 보안 강화를 위해 세션을 사용하려면 SECRET_KEY가 필수입니다.
 app.config["SECRET_KEY"] = os.getenv("FLASK_SECRET", "devsecret_for_class")
 
-# --- CAPTCHA 설정 ---
+# CAPTCHA 설정
 CAPTCHA_TTL = 120 # 유효 시간 (초)
 CAPTCHA_LEN = 5  # 문자열 길이
-# 모호한 문자(I, l, O, 0)를 제거한 문자 집합
+# 문자 한정
 ALPHABET = "ABCDEFGHJKLMNPQRSTUVWXYZ23456789" 
 
 # --- CAPTCHA 텍스트 및 세션 관리 ---
@@ -30,15 +29,13 @@ def invalidate_challenge():
     """CAPTCHA 챌린지 정보를 세션에서 제거하여 무효화합니다."""
     session.pop("captcha", None)
 
-# --- CAPTCHA 이미지 생성 관련 ---
+# CAPTCHA 이미지 생성 관련
 FONT_CANDIDATES = [
-    # 폰트 경로 후보 (시스템 환경에 맞게 조정 필요)
     "/usr/share/fonts/truetype/dejavu/DejaVuSans-Bold.ttf",
     "/usr/share/fonts/truetype/liberation/LiberationSans-Bold.ttf",
     "arial.ttf", "FreeMono.ttf"
 ]
 def choose_font(size=42):
-    """사용 가능한 폰트를 찾아 반환하거나 기본 폰트를 로드합니다."""
     for p in FONT_CANDIDATES:
         try:
             return ImageFont.truetype(p, size=size)
@@ -47,7 +44,6 @@ def choose_font(size=42):
     return ImageFont.load_default()
 
 def generate_captcha_image(text, width=260, height=90, rotate_range=28, line_count=6, dot_count=400):
-    """CAPTCHA 이미지에 노이즈와 변형을 적용하여 생성합니다."""
     img = Image.new("RGB", (width, height), (255, 255, 255))
     d = ImageDraw.Draw(img)
 
@@ -69,12 +65,10 @@ def generate_captcha_image(text, width=260, height=90, rotate_range=28, line_cou
             fill=(random.randint(10,120), random.randint(10,120), random.randint(10,120)))
         
         angle = random.randint(-rotate_range, rotate_range)
-        # 문자 이미지 회전
         ch_img = ch_img.rotate(angle, resample=Image.BICUBIC, expand=1) 
         
         x = base_x + i*spacing + random.randint(-4,6)
         y = (height - ch_img.size[1])//2 + random.randint(-6,8)
-        # 이미지 붙여넣기 (ch_img의 알파 채널을 마스크로 사용)
         img.paste(ch_img, (x, y), ch_img) 
 
 
