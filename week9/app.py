@@ -7,7 +7,7 @@ app.config["SECRET_KEY"] = os.getenv("FLASK_SECRET", "devsecret_for_class")
 
 # CAPTCHA 설정
 CAPTCHA_TTL = 120 # 유효 시간 (초)
-CAPTCHA_LEN = 5  # 문자열 길이
+CAPTCHA_LEN = 10  # 문자열 길이
 # 문자 한정
 ALPHABET = "ABCDEFGHJKLMNPQRSTUVWXYZ23456789" 
 
@@ -43,7 +43,7 @@ def choose_font(size=42):
             continue
     return ImageFont.load_default()
 
-def generate_captcha_image(text, width=260, height=90, rotate_range=28, line_count=6, dot_count=400):
+def generate_captcha_image(text, width=260, height=90, rotate_range=28, line_count=6, dot_count=200):
     img = Image.new("RGB", (width, height), (255, 255, 255))
     d = ImageDraw.Draw(img)
 
